@@ -8,7 +8,8 @@ namespace Common
 {
     public static class IdentityExtensions
     {
-        public static string FindFirstValue(this ClaimsIdentity identity, string claimType)
+      
+         public static string FindFirstValue(this ClaimsIdentity identity, string claimType)
         {
             return identity?.FindFirst(claimType)?.Value;
         }

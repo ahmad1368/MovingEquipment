@@ -3,17 +3,20 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34525.116
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovingEquipment", "MovingEquipment.csproj", "{264EAF5A-CEF6-4C6E-B955-A3C0C9077FC8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{C3D1B251-ECCE-4EF1-B4BB-600CDDF1111C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{C3D1B251-ECCE-4EF1-B4BB-600CDDF1111C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data", "Data\Data.csproj", "{932947F9-852E-4FFC-ADCF-C0D6DC963520}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data", "Data\Data.csproj", "{932947F9-852E-4FFC-ADCF-C0D6DC963520}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "Services\Services.csproj", "{537AED27-CC47-4780-A7EC-7C6F751AB218}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services", "Services\Services.csproj", "{537AED27-CC47-4780-A7EC-7C6F751AB218}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Entites", "Entites\Entites.csproj", "{CB3A6377-E1E0-4463-8CB0-887C18BDADAC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Entites", "Entites\Entites.csproj", "{CB3A6377-E1E0-4463-8CB0-887C18BDADAC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebFramework", "WebFramework\WebFramework.csproj", "{448CCFF4-0A3A-4574-BB70-573C64235CCF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebFramework", "WebFramework\WebFramework.csproj", "{448CCFF4-0A3A-4574-BB70-573C64235CCF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contractor", "Contractor\Contractor.csproj", "{A73A975F-87FE-4E10-8AAA-0F301687D0DC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{448CCFF4-0A3A-4574-BB70-573C64235CCF} = {448CCFF4-0A3A-4574-BB70-573C64235CCF}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,10 +24,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{264EAF5A-CEF6-4C6E-B955-A3C0C9077FC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{264EAF5A-CEF6-4C6E-B955-A3C0C9077FC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{264EAF5A-CEF6-4C6E-B955-A3C0C9077FC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{264EAF5A-CEF6-4C6E-B955-A3C0C9077FC8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C3D1B251-ECCE-4EF1-B4BB-600CDDF1111C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C3D1B251-ECCE-4EF1-B4BB-600CDDF1111C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C3D1B251-ECCE-4EF1-B4BB-600CDDF1111C}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -45,6 +44,10 @@ Global
 		{448CCFF4-0A3A-4574-BB70-573C64235CCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{448CCFF4-0A3A-4574-BB70-573C64235CCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{448CCFF4-0A3A-4574-BB70-573C64235CCF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A73A975F-87FE-4E10-8AAA-0F301687D0DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A73A975F-87FE-4E10-8AAA-0F301687D0DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A73A975F-87FE-4E10-8AAA-0F301687D0DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A73A975F-87FE-4E10-8AAA-0F301687D0DC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
