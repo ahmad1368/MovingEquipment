@@ -1,4 +1,11 @@
+
+
+using Contractor;
+using Microsoft.AspNetCore;
+
 var builder = WebApplication.CreateBuilder(args);
+
+WebHost.CreateDefaultBuilder(args).UseStartup<Startup>().Build();
 
 // Add services to the container.
 
@@ -23,3 +30,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+

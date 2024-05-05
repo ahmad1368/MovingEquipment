@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Common.Utilities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -6,22 +9,32 @@ using System.Text;
 using System.Threading.Tasks;
 
 
+
 namespace Entites
 {
     public class User:BaseEntity<Guid>
-    {
-        [Required]
-        public string UserName { get; set; }
-        [Required]
-        public string PasswordHash { get; set; }
+    { 
+        public string UserName { get; set; }        
+        public string PasswordHash { get; set; }       
         public string FullName { get; set; }
         public int Age { get; set; }
-        public int Gender { get; set; }
-        public DateTimeOffset LastLoginDate { get; set; }
-
-        
+        public GenderType Gender { get; set; }
+        public DateTimeOffset LastLoginDate { get; set; } 
+        public ICollection<ContractorSkills> ContractorSkills { get; set;}
 
     }
 
-   
+    public class UserConfiguration : IEntityTypeConfiguration<User>
+    {
+        public void Configure(EntityTypeBuilder<User> builder)
+        {
+            builder.Property(p => p.UserName).IsRequired().HasMaxLength(100);
+            builder.Property(p=>p.PasswordHash).IsRequired().HasMaxLength(500);
+            builder.Property(p => p.FullName).HasMaxLength(100);
+            builder.HasMany(p=>p.ContractorSkills).WithOne(p=>p.User).HasForeignKey(p=>p.UserId);
+
+        }
+    }
+
+
 }
