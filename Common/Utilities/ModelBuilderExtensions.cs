@@ -80,7 +80,7 @@ namespace Common.Utilities
         /// Dynamicaly load all IEntityTypeConfiguration with Reflection
         /// </summary>
         /// <param name="modelBuilder"></param>
-        /// <param name="assemblies">Assemblies contains Entities</param>
+        /// <param name="assemblies">Assemblies contains Entites</param>
         public static void RegisterEntityTypeConfiguration(this ModelBuilder modelBuilder, params Assembly[] assemblies)
         {
             MethodInfo applyGenericMethod = typeof(ModelBuilder).GetMethods().First(m => m.Name == nameof(ModelBuilder.ApplyConfiguration));
@@ -102,12 +102,12 @@ namespace Common.Utilities
         }
 
         /// <summary>
-        /// Dynamicaly register all Entities that inherit from specific BaseType
+        /// Dynamicaly register all Entites that inherit from specific BaseType
         /// </summary>
         /// <param name="modelBuilder"></param>
-        /// <param name="baseType">Base type that Entities inherit from this</param>
-        /// <param name="assemblies">Assemblies contains Entities</param>
-        public static void RegisterAllEntities<BaseType>(this ModelBuilder modelBuilder, params Assembly[] assemblies)
+        /// <param name="baseType">Base type that Entites inherit from this</param>
+        /// <param name="assemblies">Assemblies contains Entites</param>
+        public static void RegisterAllEntites<BaseType>(this ModelBuilder modelBuilder, params Assembly[] assemblies)
         {
             IEnumerable<Type> types = assemblies.SelectMany(a => a.GetExportedTypes())
                 .Where(c => c.IsClass && !c.IsAbstract && c.IsPublic && typeof(BaseType).IsAssignableFrom(c));

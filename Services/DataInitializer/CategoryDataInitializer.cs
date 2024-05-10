@@ -1,5 +1,5 @@
 ﻿using Data.Repositories;
-using Entities;
+using Entites;
 using System.Linq;
 
 namespace Services.DataInitializer

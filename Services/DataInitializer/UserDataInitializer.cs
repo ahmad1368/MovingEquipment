@@ -1,4 +1,4 @@
-﻿using Entities;
+﻿using Entites;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;

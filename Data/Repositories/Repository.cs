@@ -14,34 +14,34 @@ namespace Data.Repositories
         where TEntity : class, IEntity
     {
         protected readonly ApplicationDbContext DbContext;
-        public DbSet<TEntity> Entities { get; }
-        public virtual IQueryable<TEntity> Table => Entities;
-        public virtual IQueryable<TEntity> TableNoTracking => Entities.AsNoTracking();
+        public DbSet<TEntity> Entites { get; }
+        public virtual IQueryable<TEntity> Table => Entites;
+        public virtual IQueryable<TEntity> TableNoTracking => Entites.AsNoTracking();
 
         public Repository(ApplicationDbContext dbContext)
         {
             DbContext = dbContext;
-            Entities = DbContext.Set<TEntity>(); // City => Cities
+            Entites = DbContext.Set<TEntity>(); // City => Cities
         }
 
         #region Async Method
         public virtual ValueTask<TEntity> GetByIdAsync(CancellationToken cancellationToken, params object[] ids)
         {
-            return Entities.FindAsync(ids, cancellationToken);
+            return Entites.FindAsync(ids, cancellationToken);
         }
 
         public virtual async Task AddAsync(TEntity entity, CancellationToken cancellationToken, bool saveNow = true)
         {
             Assert.NotNull(entity, nameof(entity));
-            await Entities.AddAsync(entity, cancellationToken).ConfigureAwait(false);
+            await Entites.AddAsync(entity, cancellationToken).ConfigureAwait(false);
             if (saveNow)
                 await DbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         }
 
-        public virtual async Task AddRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken, bool saveNow = true)
+        public virtual async Task AddRangeAsync(IEnumerable<TEntity> Entites, CancellationToken cancellationToken, bool saveNow = true)
         {
-            Assert.NotNull(entities, nameof(entities));
-            await Entities.AddRangeAsync(entities, cancellationToken).ConfigureAwait(false);
+            Assert.NotNull(Entites, nameof(Entites));
+            await Entites.AddRangeAsync(Entites, cancellationToken).ConfigureAwait(false);
             if (saveNow)
                 await DbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         }
@@ -49,15 +49,15 @@ namespace Data.Repositories
         public virtual async Task UpdateAsync(TEntity entity, CancellationToken cancellationToken, bool saveNow = true)
         {
             Assert.NotNull(entity, nameof(entity));
-            Entities.Update(entity);
+            Entites.Update(entity);
             if (saveNow)
                 await DbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         }
 
-        public virtual async Task UpdateRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken, bool saveNow = true)
+        public virtual async Task UpdateRangeAsync(IEnumerable<TEntity> Entites, CancellationToken cancellationToken, bool saveNow = true)
         {
-            Assert.NotNull(entities, nameof(entities));
-            Entities.UpdateRange(entities);
+            Assert.NotNull(Entites, nameof(Entites));
+            Entites.UpdateRange(Entites);
             if (saveNow)
                 await DbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         }
@@ -65,15 +65,15 @@ namespace Data.Repositories
         public virtual async Task DeleteAsync(TEntity entity, CancellationToken cancellationToken, bool saveNow = true)
         {
             Assert.NotNull(entity, nameof(entity));
-            Entities.Remove(entity);
+            Entites.Remove(entity);
             if (saveNow)
                 await DbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         }
 
-        public virtual async Task DeleteRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken, bool saveNow = true)
+        public virtual async Task DeleteRangeAsync(IEnumerable<TEntity> Entites, CancellationToken cancellationToken, bool saveNow = true)
         {
-            Assert.NotNull(entities, nameof(entities));
-            Entities.RemoveRange(entities);
+            Assert.NotNull(Entites, nameof(Entites));
+            Entites.RemoveRange(Entites);
             if (saveNow)
                 await DbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         }
@@ -82,21 +82,21 @@ namespace Data.Repositories
         #region Sync Methods
         public virtual TEntity GetById(params object[] ids)
         {
-            return Entities.Find(ids);
+            return Entites.Find(ids);
         }
 
         public virtual void Add(TEntity entity, bool saveNow = true)
         {
             Assert.NotNull(entity, nameof(entity));
-            Entities.Add(entity);
+            Entites.Add(entity);
             if (saveNow)
                 DbContext.SaveChanges();
         }
 
-        public virtual void AddRange(IEnumerable<TEntity> entities, bool saveNow = true)
+        public virtual void AddRange(IEnumerable<TEntity> Entites, bool saveNow = true)
         {
-            Assert.NotNull(entities, nameof(entities));
-            Entities.AddRange(entities);
+            Assert.NotNull(Entites, nameof(Entites));
+            Entites.AddRange(Entites);
             if (saveNow)
                 DbContext.SaveChanges();
         }
@@ -104,15 +104,15 @@ namespace Data.Repositories
         public virtual void Update(TEntity entity, bool saveNow = true)
         {
             Assert.NotNull(entity, nameof(entity));
-            Entities.Update(entity);
+            Entites.Update(entity);
             if (saveNow)
 				DbContext.SaveChanges();
         }
 
-        public virtual void UpdateRange(IEnumerable<TEntity> entities, bool saveNow = true)
+        public virtual void UpdateRange(IEnumerable<TEntity> Entites, bool saveNow = true)
         {
-            Assert.NotNull(entities, nameof(entities));
-            Entities.UpdateRange(entities);
+            Assert.NotNull(Entites, nameof(Entites));
+            Entites.UpdateRange(Entites);
             if (saveNow)
                 DbContext.SaveChanges();
         }
@@ -120,15 +120,15 @@ namespace Data.Repositories
         public virtual void Delete(TEntity entity, bool saveNow = true)
         {
             Assert.NotNull(entity, nameof(entity));
-            Entities.Remove(entity);
+            Entites.Remove(entity);
             if (saveNow)
                 DbContext.SaveChanges();
         }
 
-        public virtual void DeleteRange(IEnumerable<TEntity> entities, bool saveNow = true)
+        public virtual void DeleteRange(IEnumerable<TEntity> Entites, bool saveNow = true)
         {
-            Assert.NotNull(entities, nameof(entities));
-            Entities.RemoveRange(entities);
+            Assert.NotNull(Entites, nameof(Entites));
+            Entites.RemoveRange(Entites);
             if (saveNow)
                 DbContext.SaveChanges();
         }
@@ -147,7 +147,7 @@ namespace Data.Repositories
         {
             Assert.NotNull(entity, nameof(entity));
             if (DbContext.Entry(entity).State == EntityState.Detached)
-                Entities.Attach(entity);
+                Entites.Attach(entity);
         }
         #endregion
 

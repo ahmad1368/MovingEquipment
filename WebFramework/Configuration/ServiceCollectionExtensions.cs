@@ -5,7 +5,7 @@ using Data;
 using Data.Repositories;
 using ElmahCore.Mvc;
 using ElmahCore.Sql;
-using Entities;
+using Entites;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

@@ -27,7 +27,7 @@ namespace Data
         {
             base.OnModelCreating(modelBuilder);
             var entitesAssembly = typeof(IEntity).Assembly;
-            modelBuilder.RegisterAllEntities<IEntity>(entitesAssembly);
+            modelBuilder.RegisterAllEntites<IEntity>(entitesAssembly);
             modelBuilder.RegisterEntityTypeConfiguration(entitesAssembly);
             modelBuilder.AddRestrictDeleteBehaviorConvention();
             modelBuilder.AddSequentialGuidForIdConvention();

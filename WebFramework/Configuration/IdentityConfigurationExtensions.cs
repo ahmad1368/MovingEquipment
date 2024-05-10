@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Entities;
+using Entites;
 using Common;
 using Microsoft.AspNetCore.Identity;
 using Data;
