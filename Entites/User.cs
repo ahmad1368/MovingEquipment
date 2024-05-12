@@ -1,4 +1,5 @@
 ﻿using Common.Utilities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -12,12 +13,20 @@ using System.Threading.Tasks;
 
 namespace Entites
 {
-    public class User:BaseEntity<Guid>
-    { 
-        public string UserName { get; set; }        
-        public string PasswordHash { get; set; }       
+    public class User : IdentityUser<Guid>, IEntity<Guid>
+    {
+        public User()
+        {
+            IsActive = true;
+        }
+
+        ////public string UserName { get; set; }        
+        ////public string PasswordHash { get; set; }       
+        [Required]
+        [StringLength(100)]
         public string FullName { get; set; }
         public int Age { get; set; }
+        public bool IsActive { get; set; }
         public GenderType Gender { get; set; }
         public DateTimeOffset LastLoginDate { get; set; } 
         public ICollection<ContractorSkills> ContractorSkills { get; set;}
