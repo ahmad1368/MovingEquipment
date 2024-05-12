@@ -1,6 +1,7 @@
 ﻿using Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using WebFramework.Configuration;
 
 namespace Contractor
 {
@@ -27,34 +28,34 @@ namespace Contractor
         {
             app.IntializeDatabase();
 
-            //app.UseCustomExceptionHandler();
+            app.UseCustomExceptionHandler();
 
-            //app.UseHsts(env);
+            app.UseHsts(env);
 
-            //app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
 
-            //app.UseElmahCore(_siteSetting);
+            app.UseElmahCore(_siteSetting);
 
-            //app.UseSwaggerAndUI();
+            app.UseSwaggerAndUI();
 
-            //app.UseRouting();
+            app.UseRouting();
 
-            //app.UseAuthentication();
-            //app.UseAuthorization();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
-            ////Use this config just in Develoment (not in Production)
-            ////app.UseCors(config => config.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+            //Use this config just in Develoment (not in Production)
+            //app.UseCors(config => config.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 
-            //app.UseEndpoints(config =>
-            //{
-            //    config.MapControllers(); // Map attribute routing
-            //    //    .RequireAuthorization(); Apply AuthorizeFilter as global filter to all endpoints
-            //    //config.MapDefaultControllerRoute(); // Map default route {controller=Home}/{action=Index}/{id?}
-            //});
+            app.UseEndpoints(config =>
+            {
+                config.MapControllers(); // Map attribute routing
+                //    .RequireAuthorization(); Apply AuthorizeFilter as global filter to all endpoints
+                //config.MapDefaultControllerRoute(); // Map default route {controller=Home}/{action=Index}/{id?}
+            });
 
-            ////Using 'UseMvc' to configure MVC is not supported while using Endpoint Routing.
-            ////To continue using 'UseMvc', please set 'MvcOptions.EnableEndpointRouting = false' inside 'ConfigureServices'.
-            ////app.UseMvc();
+            //Using 'UseMvc' to configure MVC is not supported while using Endpoint Routing.
+            //To continue using 'UseMvc', please set 'MvcOptions.EnableEndpointRouting = false' inside 'ConfigureServices'.
+            //app.UseMvc();
         }
     }
 }
