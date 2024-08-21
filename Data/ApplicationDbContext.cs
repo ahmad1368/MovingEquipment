@@ -19,7 +19,8 @@ namespace Data
 
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //{
-        //    optionsBuilder.UseSqlServer("Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=MovingEquipment;Data Source=.");
+        ////    optionsBuilder.UseSqlServer("Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=MovingEquipment;Data Source=.");
+        //    optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=MovingEquipment;Integrated security=true");
         //    base.OnConfiguring(optionsBuilder);
         //}
 

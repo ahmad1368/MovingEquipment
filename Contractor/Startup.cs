@@ -16,8 +16,8 @@ namespace Contractor
         {
             services.AddDbContext<ApplicationDbContext>(option =>
             {
-                //option.UseSqlServer(Configuration.GetConnectionString("SqlServer"));
-                option.UseSqlServer(Configuration.GetConnectionString("Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=MovingEquipment;Data Source=."));
+                option.UseSqlServer(Configuration.GetConnectionString("SqlServer"));
+                //option.UseSqlServer(Configuration.GetConnectionString("Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=MovingEquipment;Data Source=."));
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
