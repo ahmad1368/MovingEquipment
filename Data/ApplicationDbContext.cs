@@ -1,6 +1,5 @@
 ﻿using Common.Utilities;
 using Entites;
-using Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -31,7 +30,7 @@ namespace Data
 
             var entitiesAssembly = typeof(IEntity).Assembly;
 
-            modelBuilder.RegisterAllEntites<IEntity>(entitiesAssembly);
+            modelBuilder.RegisterAllEntities<IEntity>(entitiesAssembly);            
             modelBuilder.RegisterEntityTypeConfiguration(entitiesAssembly);
             modelBuilder.AddRestrictDeleteBehaviorConvention();
             modelBuilder.AddSequentialGuidForIdConvention();

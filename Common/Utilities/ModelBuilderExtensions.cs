@@ -107,7 +107,7 @@ namespace Common.Utilities
         /// <param name="modelBuilder"></param>
         /// <param name="baseType">Base type that Entites inherit from this</param>
         /// <param name="assemblies">Assemblies contains Entites</param>
-        public static void RegisterAllEntites<BaseType>(this ModelBuilder modelBuilder, params Assembly[] assemblies)
+        public static void RegisterAllEntities<BaseType>(this ModelBuilder modelBuilder, params Assembly[] assemblies)
         {
             IEnumerable<Type> types = assemblies.SelectMany(a => a.GetExportedTypes())
                 .Where(c => c.IsClass && !c.IsAbstract && c.IsPublic && typeof(BaseType).IsAssignableFrom(c));
