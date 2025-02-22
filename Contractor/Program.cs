@@ -16,7 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
 CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en-US");
 
-WebHost.CreateDefaultBuilder(args).UseStartup<Startup>().Build();
+//WebHost.CreateDefaultBuilder(args).UseStartup<Startup>().Build();
 
 // Add services to the container.
 
