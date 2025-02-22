@@ -4,6 +4,7 @@ using Data;
 using Data.Repositories;
 using Entites;
 using Services;
+using Services.Services;
 
 namespace WebFramework.Configuration
 {
@@ -14,7 +15,7 @@ namespace WebFramework.Configuration
             //RegisterType > As > Liftetime
             containerBuilder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
 
-            var commonAssembly = typeof(SiteSettings).Assembly;
+            var commonAssembly = typeof(Common.Utilities.SiteSettings).Assembly;
             var EntitesAssembly = typeof(IEntity).Assembly;
             var dataAssembly = typeof(ApplicationDbContext).Assembly;
             var servicesAssembly = typeof(JwtService).Assembly;

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebFramework.Configuration;
+using WebFramework.Middlewares;
 
 namespace Contractor
 {
@@ -26,22 +27,22 @@ namespace Contractor
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.IntializeDatabase();
+            //app.IntializeDatabase();
 
-            app.UseCustomExceptionHandler();
+            //app.UseCustomExceptionHandler();
 
-            app.UseHsts(env);
+            //app.UseHsts(env);
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
-            app.UseElmahCore(_siteSetting);
+            //app.UseElmahCore(_siteSetting);
 
-            app.UseSwaggerAndUI();
+            //app.UseSwaggerAndUI();
 
-            app.UseRouting();
+            //app.UseRouting();
 
-            app.UseAuthentication();
-            app.UseAuthorization();
+            //app.UseAuthentication();
+            //app.UseAuthorization();
 
             //Use this config just in Develoment (not in Production)
             //app.UseCors(config => config.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Data
 {
-    public class ApplicationDbContext : IdentityDbContext<User, Role, int>
+    public class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     //DbContext
     {
         public ApplicationDbContext(DbContextOptions options)

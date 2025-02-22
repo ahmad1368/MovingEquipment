@@ -3,6 +3,7 @@ using Entites;
 using Common;
 using Microsoft.AspNetCore.Identity;
 using Data;
+using Common.Utilities;
 
 namespace WebFramework.Configuration
 {

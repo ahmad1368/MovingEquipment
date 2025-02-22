@@ -29,7 +29,7 @@ namespace Entites
         public bool IsActive { get; set; }
         public GenderType Gender { get; set; }
         public DateTimeOffset LastLoginDate { get; set; } 
-        public ICollection<ContractorSkills> ContractorSkills { get; set;}
+        public ICollection<ContractorSkills>? ContractorSkills { get; set;}
 
     }
 
