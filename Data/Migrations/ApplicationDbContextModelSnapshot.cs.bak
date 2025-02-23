@@ -81,60 +81,6 @@ namespace Data.Migrations
                     b.ToTable("ContractorSkills");
                 });
 
-            modelBuilder.Entity("Entites.Posts", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasDefaultValueSql("NEWSEQUENTIALID()");
-
-                    b.Property<DateTime>("DeleteDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DeleteUser")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("InsertDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("InsertUser")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid?>("PostsId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Topic")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("UpdateDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UpdateUser")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PostsId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Posts");
-                });
-
             modelBuilder.Entity("Entites.Role", b =>
                 {
                     b.Property<Guid>("Id")
@@ -433,21 +379,6 @@ namespace Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Entites.Posts", b =>
-                {
-                    b.HasOne("Entites.Posts", null)
-                        .WithMany("Repilies")
-                        .HasForeignKey("PostsId");
-
-                    b.HasOne("Entites.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Entites.Skills", b =>
                 {
                     b.HasOne("Entites.Skills", "ParrentSkills")
@@ -506,11 +437,6 @@ namespace Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Entites.Posts", b =>
-                {
-                    b.Navigation("Repilies");
                 });
 
             modelBuilder.Entity("Entites.Skills", b =>
