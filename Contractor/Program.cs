@@ -14,6 +14,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
+using Data.Repositories;
 
 // تنظیم فرهنگ پیش‌فرض
 CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
@@ -29,6 +30,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 // ساخت اپلیکیشن
 var app = builder.Build();
