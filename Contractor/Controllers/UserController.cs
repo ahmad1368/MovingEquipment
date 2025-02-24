@@ -1,4 +1,6 @@
 ﻿using Common;
+using Common.Utilities;
+using Contractor.Models;
 using Data.Repositories;
 using Entites;
 using Microsoft.AspNetCore.Mvc;
@@ -37,10 +39,27 @@ namespace Contractor.Controllers
 
 
         [HttpPost]
-        public async Task<ApiResult<User>> Create(User user, CancellationToken cancellationToken)
+        public async Task<ApiResult<User>> Create(UserDTO user, CancellationToken cancellationToken)
         {
-            await userRepository.AddAsync(user, cancellationToken);
-            return user;
+            var newUser = new User
+            {
+                
+                UserName = user.UserName,
+                FullName = user.FullName,
+                Age = user.Age,
+                IsActive = true,
+                Gender = user.Gender,
+                LastLoginDate = DateTime.Now,
+                EmailConfirmed = true,
+                PasswordHash = SecurityHelper.GetSha256Hash( user.Password),
+                PhoneNumberConfirmed = true,
+                TwoFactorEnabled = true,
+                LockoutEnabled = true,
+                AccessFailedCount = 1
+            };
+
+            await userRepository.AddAsync(newUser, cancellationToken);
+            return newUser;
 
         }
 
