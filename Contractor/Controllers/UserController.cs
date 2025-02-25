@@ -10,10 +10,12 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using WebFramework.Api;
+using WebFramework.Filters;
 
 namespace Contractor.Controllers
 {
     [Route("api/[controller]")]
+    [ApiResultFilter]
     [ApiController]
     public class UserController  : ControllerBase
     {
