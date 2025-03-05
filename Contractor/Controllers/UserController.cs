@@ -2,9 +2,11 @@
 using Common.Utilities;
 using Contractor.Models;
 using Data.Repositories;
+using ElmahCore;
 using Entites;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Sentry;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -27,6 +29,7 @@ namespace Contractor.Controllers
         [HttpGet]
         public async Task<ApiResult<List<User>>> Get()
         {
+
             var users = await userRepository.TableNoTracking.ToListAsync();
             return users;
         }
@@ -43,6 +46,8 @@ namespace Contractor.Controllers
         [HttpPost]
         public async Task<ApiResult<User>> Create(UserDTO user, CancellationToken cancellationToken)
         {
+          
+
             var newUser = new User
             {
                 
@@ -66,9 +71,11 @@ namespace Contractor.Controllers
         }
 
         [HttpPut]
-        public async Task<ApiResult<User>> Update(int id,User user, CancellationToken cancellationToken)
+        public async Task<ApiResult<User>> Update(Guid id,User user, CancellationToken cancellationToken)
         {
-           var updateUser = await userRepository.GetByIdAsync(cancellationToken, id);
+            throw new Exception("this is test in Update Action for new Config sentri.io");
+
+            var updateUser = await userRepository.GetByIdAsync(cancellationToken, id);
 
             updateUser.UserName = user.UserName ;
             updateUser.FullName = user.FullName ;
@@ -85,8 +92,9 @@ namespace Contractor.Controllers
             return Ok(updateUser);
         }
         [HttpDelete]
-        public async Task<ApiResult> Delete(int id, CancellationToken cancellationToken)
+        public async Task<ApiResult> Delete(Guid id, CancellationToken cancellationToken)
         {
+           
             var user = await userRepository.GetByIdAsync(cancellationToken, id);
             await userRepository.DeleteAsync(user, CancellationToken.None);
             return Ok();

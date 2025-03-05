@@ -15,55 +15,84 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using Data.Repositories;
+using ElmahCore.Mvc;
+using ElmahCore.Sql;
+using NLog.Web;
 
-// تنظیم فرهنگ پیش‌فرض
-CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
-CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en-US");
-
-// ایجاد Builder برای WebApplication
-var builder = WebApplication.CreateBuilder(args);
-
-// پیکربندی سرویس‌ها
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));
-
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-
-// ساخت اپلیکیشن
-var app = builder.Build();
-
-// راه‌اندازی پایگاه داده هنگام اجرا
-if (args.Contains("migrate")) // برای اجرای Migrations از این شرط استفاده کن
+var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
+try
 {
-    using var scope = app.Services.CreateScope();
-    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    dbContext.Database.Migrate();
-    Console.WriteLine("Database Migration Applied Successfully.");
-    return;
+    var builder = WebApplication.CreateBuilder(args);
+
+
+    builder.WebHost.UseSentry(o =>
+    {
+        o.Dsn = "https://115be97abab45146f0236f19396d305b@o4508918186967040.ingest.us.sentry.io/4508918199746560";
+        o.Debug = true; // فعال‌سازی لاگ‌های دیباگ
+        o.TracesSampleRate = 1.0; // ثبت تمامی تراکنش‌ها
+    });
+
+    builder.Logging.ClearProviders().SetMinimumLevel(LogLevel.Trace).AddNLog("nlog.config");
+
+
+    builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));
+
+    builder.Services.AddControllers();
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddSwaggerGen();
+    builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+    builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+    builder.Host.UseNLog();
+
+    builder.Services.AddElmah<SqlErrorLog>(option =>
+    {
+        option.Path = "/elmah-error";
+        option.ConnectionString = builder.Configuration.GetConnectionString("Elmah");
+    });
+
+    var app = builder.Build();
+
+    // Exception Handling
+    app.UseCustomExceptionHandler();
+
+    if (args.Contains("migrate"))
+    {
+        using var scope = app.Services.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        dbContext.Database.Migrate();
+        Console.WriteLine("Database Migration Applied Successfully.");
+        return;
+    }
+
+    app.UseHttpsRedirection();
+    app.UseRouting();
+    app.UseAuthentication();
+    app.UseAuthorization();
+    app.UseElmah();
+
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
+
+    app.MapControllers();
+
+    // فعال‌سازی Sentry Middleware
+    app.UseSentryTracing();
+
+
+
+    app.Run();
 }
-
-// مدیریت خطاها
-app.UseCustomExceptionHandler();
-
-// پیکربندی HTTPS و مسیرها
-app.UseHttpsRedirection();
-app.UseRouting();
-app.UseAuthentication();
-app.UseAuthorization();
-
-// فعال‌سازی Swagger در محیط توسعه
-if (app.Environment.IsDevelopment())
+catch (Exception ex)
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    logger.Error(ex, "Stopped program because of exception");
+    throw;
 }
-
-// ثبت کنترلرها
-app.MapControllers();
-
-// اجرای برنامه
-app.Run();
+finally
+{
+    NLog.LogManager.Shutdown();
+}

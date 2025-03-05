@@ -50,7 +50,9 @@ namespace WebFramework.Middlewares
             }
             catch (AppException exception)
             {
+               
                 _logger.LogError(exception, exception.Message);
+              
                 httpStatusCode = exception.HttpStatusCode;
                 apiStatusCode = exception.ApiStatusCode;
 
@@ -75,6 +77,7 @@ namespace WebFramework.Middlewares
                 {
                     message = exception.Message;
                 }
+ 
                 await WriteToResponseAsync();
             }
             catch (SecurityTokenExpiredException exception)
