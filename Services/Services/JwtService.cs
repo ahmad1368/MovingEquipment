@@ -21,7 +21,7 @@ namespace Services.Services
 
         public JwtService(IOptionsSnapshot<SiteSettings> settings, SignInManager<User> signInManager)
         {
-            _siteSetting = settings.Value;
+            _siteSetting = settings.Value ?? throw new ArgumentNullException(nameof(settings));
             this.signInManager = signInManager;
         }
 
@@ -46,10 +46,7 @@ namespace Services.Services
                 EncryptingCredentials = encryptingCredentials,
                 Subject = new ClaimsIdentity(claims)
             };
-
-            //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-            //JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
-            //JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
+             
 
             var tokenHandler = new JwtSecurityTokenHandler();
 
@@ -63,27 +60,14 @@ namespace Services.Services
         private async Task<IEnumerable<Claim>> _getClaimsAsync(User user)
         {
             var result = await signInManager.ClaimsFactory.CreateAsync(user);
-            //add custom claims
+            if (result == null)
+            {
+                throw new Exception("signInManager.ClaimsFactory returned null.");
+            }
             var list = new List<Claim>(result.Claims);
-            list.Add(new Claim(ClaimTypes.MobilePhone, "09123456987"));
+            list.Add(new Claim(ClaimTypes.MobilePhone, "+17783471347"));
             return list;
-
-            //JwtRegisteredClaimNames.Sub
-            //var securityStampClaimType = new ClaimsIdentityOptions().SecurityStampClaimType;
-
-            //var list = new List<Claim>
-            //{
-            //    new Claim(ClaimTypes.Name, user.UserName),
-            //    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            //    new Claim(ClaimTypes.MobilePhone, "09123456987"),
-            //    new Claim(securityStampClaimType, user.SecurityStamp.ToString())
-            //};
-
-            //var roles = new Role[] { new Role { Name = "Admin" } };
-            //foreach (var role in roles)
-            //    list.Add(new Claim(ClaimTypes.Role, role.Name));
-
-            //return list;
+            
         }
     }
 }

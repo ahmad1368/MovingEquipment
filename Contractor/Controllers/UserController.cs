@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Exceptions;
 using Common.Utilities;
 using Contractor.Models;
 using Data.Repositories;
@@ -6,9 +7,12 @@ using ElmahCore;
 using Entites;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Sentry;
+using Services.Services;
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using WebFramework.Api;
@@ -22,13 +26,25 @@ namespace Contractor.Controllers
     public class UserController  : ControllerBase
     {
         private IUserRepository userRepository;
+        private ILogger<UserController> logger;
+        private IJwtService jwtService;
 
-        public UserController(IUserRepository userRepository ) {
+        //public UserController(IUserRepository userRepository) {
+        //    this.userRepository = userRepository;
+
+        //}
+        public UserController(IUserRepository userRepository, ILogger<UserController> logger = null, IJwtService jwtService = null)
+        {
             this.userRepository = userRepository;
+            this.logger = logger;
+            this.jwtService = jwtService;
         }
+
+
         [HttpGet]
         public async Task<ApiResult<List<User>>> Get()
         {
+           
 
             var users = await userRepository.TableNoTracking.ToListAsync();
             return users;
@@ -41,6 +57,19 @@ namespace Contractor.Controllers
             return user;
         }
 
+        [HttpGet("[action]")]
+        public async Task<string> Token(string username,string password, CancellationToken cancellationToken)
+        {
+            var user = await userRepository.GetByUserAndPass(username, password, cancellationToken); //jwtService.GenerateAsync(user);
+            if (user == null)
+            {
+                logger.LogError("User Not Found");
+                throw new BadRequestException("UserName or Password Not Found");
+            }
+
+            var jwt = jwtService.GenerateAsync(user);
+            return await jwt;
+        }
 
 
         [HttpPost]

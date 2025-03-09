@@ -18,6 +18,9 @@ using Data.Repositories;
 using ElmahCore.Mvc;
 using ElmahCore.Sql;
 using NLog.Web;
+using Services.Services;
+using Entites;
+using Microsoft.AspNetCore.Identity;
 
 var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
 try
@@ -43,6 +46,7 @@ try
     builder.Services.AddSwaggerGen();
     builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
     builder.Services.AddScoped<IUserRepository, UserRepository>();
+    builder.Services.AddScoped<IJwtService, JwtService>();
 
     builder.Host.UseNLog();
 
@@ -51,6 +55,20 @@ try
         option.Path = "/elmah-error";
         option.ConnectionString = builder.Configuration.GetConnectionString("Elmah");
     });
+
+    builder.Services.AddIdentity<User, Role>(options =>
+    {
+        options.Password.RequireDigit = true;
+        options.Password.RequireLowercase = true;
+        options.Password.RequireUppercase = false;
+        options.Password.RequiredLength = 6;
+        options.Password.RequireNonAlphanumeric = false;
+    })
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddSignInManager()
+    .AddDefaultTokenProviders();
+
+    builder.Services.Configure<SiteSettings>(builder.Configuration.GetSection("SiteSettings"));
 
     var app = builder.Build();
 
@@ -83,7 +101,7 @@ try
     // فعال‌سازی Sentry Middleware
     app.UseSentryTracing();
 
-
+    
 
     app.Run();
 }
