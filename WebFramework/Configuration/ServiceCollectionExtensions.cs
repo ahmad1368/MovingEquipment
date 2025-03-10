@@ -7,6 +7,7 @@ using ElmahCore.Mvc;
 using ElmahCore.Sql;
 using Entites;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -118,10 +119,12 @@ namespace WebFramework.Configuration
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options =>
+            }).AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
             {
                 var secretKey = Encoding.UTF8.GetBytes(jwtSettings.SecretKey);
                 var encryptionKey = Encoding.UTF8.GetBytes(jwtSettings.EncryptKey);
+
+                
 
                 var validationParameters = new TokenValidationParameters
                 {
@@ -197,6 +200,9 @@ namespace WebFramework.Configuration
                         throw new AppException(ApiResultStatusCode.UnAuthorized, "You are unauthorized to access this resource.", HttpStatusCode.Unauthorized);
 
                         //return Task.CompletedTask;
+                        
+
+
                     }
                 };
             });

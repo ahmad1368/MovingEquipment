@@ -5,6 +5,7 @@ using Contractor.Models;
 using Data.Repositories;
 using ElmahCore;
 using Entites;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -33,7 +34,7 @@ namespace Contractor.Controllers
         //    this.userRepository = userRepository;
 
         //}
-        public UserController(IUserRepository userRepository, ILogger<UserController> logger = null, IJwtService jwtService = null)
+        public UserController(IUserRepository userRepository, ILogger<UserController> logger , IJwtService jwtService )
         {
             this.userRepository = userRepository;
             this.logger = logger;
@@ -42,6 +43,7 @@ namespace Contractor.Controllers
 
 
         [HttpGet]
+        [Authorize]
         public async Task<ApiResult<List<User>>> Get()
         {
            

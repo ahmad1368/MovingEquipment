@@ -21,12 +21,29 @@ using NLog.Web;
 using Services.Services;
 using Entites;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
 try
 {
     var builder = WebApplication.CreateBuilder(args);
+    var setting = builder.Configuration.GetSection("SiteSettings");//.Get<SiteSettings>();
+    builder.Services.AddIdentity<User, Role>(options =>
+    {
+        options.Password.RequireDigit = true;
+        options.Password.RequireLowercase = true;
+        options.Password.RequireUppercase = false;
+        options.Password.RequiredLength = 6;
+        options.Password.RequireNonAlphanumeric = false;
+    })
+   .AddEntityFrameworkStores<ApplicationDbContext>()
+   .AddSignInManager()
+   .AddDefaultTokenProviders();
 
+    builder.Services.Configure<SiteSettings>(setting);
+
+    builder.Services.AddJwtAuthentication(setting.Get<SiteSettings>().JwtSettings);
 
     builder.WebHost.UseSentry(o =>
     {
@@ -42,11 +59,16 @@ try
         options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));
 
     builder.Services.AddControllers();
+    builder.Services.AddRouting();
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
     builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
     builder.Services.AddScoped<IUserRepository, UserRepository>();
     builder.Services.AddScoped<IJwtService, JwtService>();
+
+
+    //builder.Services.AddAuthentication();
+  
 
     builder.Host.UseNLog();
 
@@ -54,21 +76,10 @@ try
     {
         option.Path = "/elmah-error";
         option.ConnectionString = builder.Configuration.GetConnectionString("Elmah");
+      
     });
 
-    builder.Services.AddIdentity<User, Role>(options =>
-    {
-        options.Password.RequireDigit = true;
-        options.Password.RequireLowercase = true;
-        options.Password.RequireUppercase = false;
-        options.Password.RequiredLength = 6;
-        options.Password.RequireNonAlphanumeric = false;
-    })
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddSignInManager()
-    .AddDefaultTokenProviders();
-
-    builder.Services.Configure<SiteSettings>(builder.Configuration.GetSection("SiteSettings"));
+   
 
     var app = builder.Build();
 
@@ -84,8 +95,8 @@ try
         return;
     }
 
-    app.UseHttpsRedirection();
     app.UseRouting();
+    app.UseHttpsRedirection();
     app.UseAuthentication();
     app.UseAuthorization();
     app.UseElmah();
