@@ -18,6 +18,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using WebFramework.Api;
 using WebFramework.Filters;
+using Common;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 
 namespace Contractor.Controllers
 {
@@ -29,24 +32,31 @@ namespace Contractor.Controllers
         private IUserRepository userRepository;
         private ILogger<UserController> logger;
         private IJwtService jwtService;
+        private readonly UserManager<User> userManager;
+        private readonly RoleManager<Role> roleManager;
+        private readonly SignInManager<User> signInManager;
 
         //public UserController(IUserRepository userRepository) {
         //    this.userRepository = userRepository;
 
         //}
-        public UserController(IUserRepository userRepository, ILogger<UserController> logger , IJwtService jwtService )
+        public UserController(IUserRepository userRepository, ILogger<UserController> logger , IJwtService jwtService,
+            UserManager<User> userManager , RoleManager<Role> roleManager, SignInManager<User> signInManager)
         {
             this.userRepository = userRepository;
             this.logger = logger;
             this.jwtService = jwtService;
+            this.userManager = userManager;
+            this.roleManager = roleManager;
+            this.signInManager = signInManager;
         }
 
 
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles="Admin")]
         public async Task<ApiResult<List<User>>> Get()
         {
-           
+            //var Role = HttpContext.User.Identity.FindFirstValue(ClaimTypes.Role);
 
             var users = await userRepository.TableNoTracking.ToListAsync();
             return users;
@@ -56,10 +66,19 @@ namespace Contractor.Controllers
         public async Task<ApiResult<User>> Get(Guid id, CancellationToken cancellationToken)
         {
             var user = await userRepository.GetByIdAsync(cancellationToken, id);
+            if (user == null)
+            {
+                logger.LogError("User Not Found");
+                throw new NotFoundException("User Not Found");
+            }
+
+            await userRepository.UpdateSecurityStampAsync(user, cancellationToken);
+
             return user;
         }
 
         [HttpGet("[action]")]
+        [AllowAnonymous]
         public async Task<string> Token(string username,string password, CancellationToken cancellationToken)
         {
             var user = await userRepository.GetByUserAndPass(username, password, cancellationToken); //jwtService.GenerateAsync(user);
@@ -75,6 +94,7 @@ namespace Contractor.Controllers
 
 
         [HttpPost]
+        
         public async Task<ApiResult<User>> Create(UserDTO user, CancellationToken cancellationToken)
         {
           
@@ -93,7 +113,9 @@ namespace Contractor.Controllers
                 PhoneNumberConfirmed = true,
                 TwoFactorEnabled = true,
                 LockoutEnabled = true,
-                AccessFailedCount = 1
+                AccessFailedCount = 1,
+                SecurityStamp = Guid.NewGuid().ToString(),
+                ConcurrencyStamp = Guid.NewGuid().ToString()
             };
 
             await userRepository.AddAsync(newUser, cancellationToken);

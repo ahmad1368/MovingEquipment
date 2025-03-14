@@ -28,22 +28,23 @@ var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
 try
 {
     var builder = WebApplication.CreateBuilder(args);
-    var setting = builder.Configuration.GetSection("SiteSettings");//.Get<SiteSettings>();
-    builder.Services.AddIdentity<User, Role>(options =>
-    {
-        options.Password.RequireDigit = true;
-        options.Password.RequireLowercase = true;
-        options.Password.RequireUppercase = false;
-        options.Password.RequiredLength = 6;
-        options.Password.RequireNonAlphanumeric = false;
-    })
-   .AddEntityFrameworkStores<ApplicationDbContext>()
-   .AddSignInManager()
-   .AddDefaultTokenProviders();
+    var settingSection = builder.Configuration.GetSection("SiteSettings");
+    var setting = settingSection.Get<SiteSettings>();
+    // builder.Services.AddIdentity<User, Role>(options =>
+    // {
+    //     options.Password.RequireDigit = true;
+    //     options.Password.RequireLowercase = true;
+    //     options.Password.RequireUppercase = false;
+    //     options.Password.RequiredLength = 6;
+    //     options.Password.RequireNonAlphanumeric = false;
+    // })
+    //.AddEntityFrameworkStores<ApplicationDbContext>()
+    //.AddSignInManager()
+    //.AddDefaultTokenProviders();
 
-    builder.Services.Configure<SiteSettings>(setting);
-
-    builder.Services.AddJwtAuthentication(setting.Get<SiteSettings>().JwtSettings);
+    builder.Services.Configure<SiteSettings>(settingSection);
+    builder.Services.AddCustomIdentity(setting.IdentitySettings);
+    builder.Services.AddJwtAuthentication(setting.JwtSettings);
 
     builder.WebHost.UseSentry(o =>
     {
@@ -58,7 +59,11 @@ try
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));
 
-    builder.Services.AddControllers();
+    builder.Services.AddControllers(config =>
+    {
+        config.Filters.Add(new Microsoft.AspNetCore.Mvc.Authorization.AuthorizeFilter());
+    });
+
     builder.Services.AddRouting();
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();

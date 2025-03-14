@@ -60,14 +60,19 @@ namespace Services.Services
         private async Task<IEnumerable<Claim>> _getClaimsAsync(User user)
         {
             var result = await signInManager.ClaimsFactory.CreateAsync(user);
+
+            var securityStampClaimType = new ClaimsIdentityOptions().SecurityStampClaimType;
             if (result == null)
             {
                 throw new Exception("signInManager.ClaimsFactory returned null.");
             }
             var list = new List<Claim>(result.Claims);
             list.Add(new Claim(ClaimTypes.MobilePhone, "+17783471347"));
+
+
+            list.Add(new Claim(securityStampClaimType, user.SecurityStamp.ToString()));
             return list;
-            
+
         }
     }
 }

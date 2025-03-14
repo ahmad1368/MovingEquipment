@@ -49,6 +49,7 @@ namespace Common.Utilities
         public string DefaultCopyRightCopyRightIcon { get; set; }
         
         public JwtSettings JwtSettings { get; set; }
+        public IdentitySettings IdentitySettings { get; set; }
         public string ElmahPath { get; set; }
     }
 }

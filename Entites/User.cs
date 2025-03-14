@@ -18,6 +18,7 @@ namespace Entites
         public User()
         {
             IsActive = true;
+            SecurityStamp = Guid.NewGuid().ToString();
         }
 
         ////public string UserName { get; set; }        

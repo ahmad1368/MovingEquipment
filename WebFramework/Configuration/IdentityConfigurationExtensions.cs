@@ -33,7 +33,8 @@ namespace WebFramework.Configuration
                 //identityOptions.Lockout.AllowedForNewUsers = false;
             })
             .AddEntityFrameworkStores<ApplicationDbContext>()
-            .AddDefaultTokenProviders();
+            .AddDefaultTokenProviders()
+            .AddSignInManager();
         }
     }
 }
