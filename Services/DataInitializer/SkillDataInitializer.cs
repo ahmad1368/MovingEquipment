@@ -19,23 +19,13 @@ namespace Services.DataInitializer
             {
                 repository.Add(new Skills
                 {
-                    Title = "دسته بندی اولیه 1"
+                    Title = "دسته بندی اولیه 1",
+                    InsertUser = "System",
+                    InsertDate = System.DateTime.Now,
+                    IsActive = true
                 });
             }
-            if (!repository.TableNoTracking.Any(p => p.Title == "دسته بندی اولیه 2"))
-            {
-                repository.Add(new Skills
-                {
-                    Title = "دسته بندی اولیه 2"
-                });
-            }
-            if (!repository.TableNoTracking.Any(p => p.Title == "دسته بندی اولیه 3"))
-            {
-                repository.Add(new Skills
-                {
-                    Title = "دسته بندی اولیه 3"
-                });
-            }
+           
         }
     }
 }

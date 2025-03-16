@@ -72,6 +72,7 @@ try
     }
 
     app.UseRouting();
+    app.IntializeDatabase();
     app.UseHttpsRedirection();
     app.UseAuthentication();
     app.UseAuthorization();

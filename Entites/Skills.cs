@@ -15,15 +15,15 @@ namespace Entites
 
         public string Title { get; set; }       
 
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
-        public int Score { get; set; }
+        public int? Score { get; set; }
 
         public Guid? ParrentSkillsId { get; set; }
          
-        public Skills ParrentSkills { get; set; }
-        public ICollection<Skills> ChildSkills { get; set; }
-        public ICollection<ContractorSkills> ContractorSkills { get; set; }
+        public Skills? ParrentSkills { get; set; }
+        public ICollection<Skills>? ChildSkills { get; set; }
+        public ICollection<ContractorSkills>? ContractorSkills { get; set; }
     }
 
     public class SkillsConfiguration : IEntityTypeConfiguration<Skills>

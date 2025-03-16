@@ -1,14 +1,13 @@
-﻿using System;
+﻿using Entites;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entites
+namespace Data.Repositories
 {
-    public class Test : BaseEntity<Guid>
+    public interface IPostRepository : IRepository<Posts>
     {
-        public string Title { get; set; }
-
     }
 }

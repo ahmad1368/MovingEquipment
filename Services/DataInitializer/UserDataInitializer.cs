@@ -28,10 +28,19 @@ namespace Services.DataInitializer
                 var user = new User
                 {
                     Age = 25,
-                    FullName = "محمد جوادابراهیمی",
+                    FullName = "Ahmad Salem Pour",
                     Gender = GenderType.Male,
                     UserName = "admin",
-                    Email = "admin@site.com"
+                    Email = "ahmad.salempoor@gmail.com",
+                    IsActive = true,
+                    LastLoginDate = DateTimeOffset.Now,
+                    EmailConfirmed = true,
+                    PasswordHash = SecurityHelper.GetSha256Hash("@Aa987654321Aa"),
+                    PhoneNumberConfirmed = true,
+                    TwoFactorEnabled = false,
+                    LockoutEnabled = false,
+                    AccessFailedCount = 0,
+                   
                 };
                 userManager.CreateAsync(user, "123456").GetAwaiter().GetResult();
                 userManager.AddToRoleAsync(user, "Admin").GetAwaiter().GetResult();

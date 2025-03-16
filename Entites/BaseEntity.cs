@@ -32,12 +32,12 @@ namespace Entites
         [Required]
         public DateTime InsertDate { get; set; }
 
-        public string UpdateUser { get; set; }
+        public string? UpdateUser { get; set; }
 
-        public DateTime UpdateDate { get; set; }
-        public string DeleteUser { get; set; }
+        public DateTime? UpdateDate { get; set; }
+        public string? DeleteUser { get; set; }
 
-        public DateTime DeleteDate { get; set; }
+        public DateTime? DeleteDate { get; set; }
 
         public bool IsActive { get; set; }
 

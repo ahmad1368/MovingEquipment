@@ -15,6 +15,6 @@ namespace Entites
         [ForeignKey(nameof(UserId))]
         public User User { get; set; }
         public ICollection<Posts>? Repilies { get; set; }
-        public string description { get; set; }
+        public string? description { get; set; }
     }
 }
