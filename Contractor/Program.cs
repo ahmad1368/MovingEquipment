@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Common.Utilities;
+using Contractor;
 using Data;
 using Data.Repositories;
 using ElmahCore.Mvc;
@@ -54,7 +55,9 @@ try
     builder.Services.AddRouting();
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
+    builder.Services.AddAutoMapper(typeof(MappingProfile));
 
+  
     builder.Host.UseNLog();
 
     var app = builder.Build();
@@ -77,7 +80,6 @@ try
     app.UseAuthentication();
     app.UseAuthorization();
     app.UseElmah();
-
     app.UseHsts(app.Environment);
     
     if (app.Environment.IsDevelopment())
@@ -87,9 +89,9 @@ try
     }
 
     app.MapControllers();
-
-    // Sentry Middleware
     app.UseSentryTracing();
+
+  
 
     app.Run();
 }

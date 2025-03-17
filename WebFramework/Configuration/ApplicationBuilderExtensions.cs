@@ -1,4 +1,5 @@
-﻿using Common.Utilities;
+﻿using AutoMapper;
+using Common.Utilities;
 using Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -41,5 +42,11 @@ namespace WebFramework.Configuration
 
             return app;
         }
+
+
+
+
+
+
     }
 }

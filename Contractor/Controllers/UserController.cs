@@ -21,6 +21,8 @@ using WebFramework.Filters;
 using Common;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
+using AutoMapper.QueryableExtensions;
+using AutoMapper;
 
 namespace Contractor.Controllers
 {
@@ -35,13 +37,14 @@ namespace Contractor.Controllers
         private readonly UserManager<User> userManager;
         private readonly RoleManager<Role> roleManager;
         private readonly SignInManager<User> signInManager;
+        private readonly IMapper Mapper;
 
         //public UserController(IUserRepository userRepository) {
         //    this.userRepository = userRepository;
 
         //}
         public UserController(IUserRepository userRepository, ILogger<UserController> logger , IJwtService jwtService,
-            UserManager<User> userManager , RoleManager<Role> roleManager, SignInManager<User> signInManager)
+            UserManager<User> userManager , RoleManager<Role> roleManager, SignInManager<User> signInManager,IMapper mapper)
         {
             this.userRepository = userRepository;
             this.logger = logger;
@@ -49,16 +52,17 @@ namespace Contractor.Controllers
             this.userManager = userManager;
             this.roleManager = roleManager;
             this.signInManager = signInManager;
+            this.Mapper = mapper;
         }
 
 
         [HttpGet]
         [Authorize(Roles="Admin")]
-        public async Task<ApiResult<List<User>>> Get()
+        public async Task<ApiResult<List<UserDTO>>> Get()
         {
             //var Role = HttpContext.User.Identity.FindFirstValue(ClaimTypes.Role);
 
-            var users = await userRepository.TableNoTracking.ToListAsync();
+            var users = await userRepository.TableNoTracking.ProjectTo<UserDTO>(Mapper.ConfigurationProvider).ToListAsync();
             return users;
         }
 
@@ -109,7 +113,7 @@ namespace Contractor.Controllers
                 Gender = user.Gender,
                 LastLoginDate = DateTime.Now,
                 EmailConfirmed = true,
-                PasswordHash = SecurityHelper.GetSha256Hash( user.Password),
+                PasswordHash = SecurityHelper.GetSha256Hash( user.PASSWORD),
                 PhoneNumberConfirmed = true,
                 TwoFactorEnabled = true,
                 LockoutEnabled = true,
@@ -126,7 +130,6 @@ namespace Contractor.Controllers
         [HttpPut]
         public async Task<ApiResult<User>> Update(Guid id,User user, CancellationToken cancellationToken)
         {
-            throw new Exception("this is test in Update Action for new Config sentri.io");
 
             var updateUser = await userRepository.GetByIdAsync(cancellationToken, id);
 
