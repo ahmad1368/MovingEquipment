@@ -20,7 +20,13 @@ namespace WebFramework.Api
             [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
             public string Message { get; set; }
 
-            public ApiResult(bool isSuccess, ApiResultStatusCode statusCode, string message = null)
+        public DateTime ResponseDateTimeGenerated { get
+            {
+                return DateTime.Now;
+            }
+        }
+
+        public ApiResult(bool isSuccess, ApiResultStatusCode statusCode, string message = null)
             {
                 IsSuccess = isSuccess;
                 StatusCode = statusCode;

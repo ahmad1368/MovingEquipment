@@ -1,12 +1,17 @@
-﻿using Entites;
+﻿using AutoMapper;
+using Entites;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using WebFramework.Api;
+using WebFramework.CustomMapping;
 
 namespace Contractor.Models
 {
-    public class SkillDTO : BaseEntity<Guid> , IValidatableObject
+    public class SkillDTO : BaseDto<SkillDTO,Skills,Guid>,IHaveCustomMapping, IValidatableObject //BaseEntity<Guid> , IValidatableObject
     {
+
+         
         [Required]
         public string Title { get; set; }
 
@@ -23,6 +28,7 @@ namespace Contractor.Models
         {
             if (Title.Equals("test"))
                 yield return new ValidationResult($"{nameof(Title)} Value is Not Valid", new[] { nameof(Title) });
+
 
         }
     }

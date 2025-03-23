@@ -18,9 +18,9 @@ namespace Entites
         public Guid UserId { get; set; }
         [ForeignKey(nameof(UserId))]
         public User User { get; set; }
-        public Guid SkillId { get; set; }
-        [ForeignKey(nameof(SkillId))]
-        public Skills Skill { get; set; }
+        public Guid SkillsId { get; set; }
+        [ForeignKey(nameof(SkillsId))]
+        public Skills Skills { get; set; }
     }
     public class ContractorSkillsConfiguration : IEntityTypeConfiguration<ContractorSkills>
     {
@@ -29,7 +29,7 @@ namespace Entites
             builder.Property(p => p.Title).IsRequired().HasMaxLength(100);
             builder.Property(p => p.Descrition).IsRequired().HasMaxLength(500);
             builder.HasOne(p=>p.User).WithMany(p=>p.ContractorSkills).HasForeignKey(p=>p.UserId);
-            builder.HasOne(p=>p.Skill).WithMany(p=>p.ContractorSkills).HasForeignKey(p=>p.SkillId);
+            builder.HasOne(p=>p.Skills).WithMany(p=>p.ContractorSkills).HasForeignKey(p=>p.SkillsId);
         }
     }
 }

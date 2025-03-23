@@ -31,5 +31,7 @@ namespace Common.Utilities
                 throw new ArgumentException("Argument is empty : " + message, $"{name} : {typeof(T)}");
             }
         }
+
+       
     }
 }

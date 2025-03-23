@@ -23,7 +23,6 @@ namespace Contractor.Models
 
         [Required]
         public string PASSWORD { get; set; }
-        public string test { get; set; }
         
 
        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)

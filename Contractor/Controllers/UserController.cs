@@ -99,28 +99,38 @@ namespace Contractor.Controllers
 
         [HttpPost]
         
-        public async Task<ApiResult<User>> Create(UserDTO user, CancellationToken cancellationToken)
+        public async Task<ApiResult<User>> Create(UserDTO userDTO, CancellationToken cancellationToken)
         {
-          
 
-            var newUser = new User
-            {
-                
-                UserName = user.UserName,
-                FullName = user.FullName,
-                Age = user.Age,
-                IsActive = true,
-                Gender = user.Gender,
-                LastLoginDate = DateTime.Now,
-                EmailConfirmed = true,
-                PasswordHash = SecurityHelper.GetSha256Hash( user.PASSWORD),
-                PhoneNumberConfirmed = true,
-                TwoFactorEnabled = true,
-                LockoutEnabled = true,
-                AccessFailedCount = 1,
-                SecurityStamp = Guid.NewGuid().ToString(),
-                ConcurrencyStamp = Guid.NewGuid().ToString()
-            };
+            var newUser = Mapper.Map<User>(userDTO);
+            newUser.PasswordHash = SecurityHelper.GetSha256Hash(userDTO.PASSWORD);
+            newUser.SecurityStamp = Guid.NewGuid().ToString();
+            newUser.ConcurrencyStamp = Guid.NewGuid().ToString();
+            newUser.LastLoginDate = DateTime.Now;
+            newUser.EmailConfirmed = true;
+            newUser.PhoneNumberConfirmed = true;
+            newUser.TwoFactorEnabled = true;
+            newUser.LockoutEnabled = true;
+            newUser.AccessFailedCount = 1;
+
+            //var newUser = new User
+            //{
+
+            //    UserName = user.UserName,
+            //    FullName = user.FullName,
+            //    Age = user.Age,
+            //    IsActive = true,
+            //    Gender = user.Gender,
+            //    LastLoginDate = DateTime.Now,
+            //    EmailConfirmed = true,
+            //    PasswordHash = SecurityHelper.GetSha256Hash( user.PASSWORD),
+            //    PhoneNumberConfirmed = true,
+            //    TwoFactorEnabled = true,
+            //    LockoutEnabled = true,
+            //    AccessFailedCount = 1,
+            //    SecurityStamp = Guid.NewGuid().ToString(),
+            //    ConcurrencyStamp = Guid.NewGuid().ToString()
+            //};
 
             await userRepository.AddAsync(newUser, cancellationToken);
             return newUser;
@@ -128,21 +138,23 @@ namespace Contractor.Controllers
         }
 
         [HttpPut]
-        public async Task<ApiResult<User>> Update(Guid id,User user, CancellationToken cancellationToken)
+        public async Task<ApiResult<User>> Update(Guid id,UserDTO userDTO, CancellationToken cancellationToken)
         {
 
             var updateUser = await userRepository.GetByIdAsync(cancellationToken, id);
 
-            updateUser.UserName = user.UserName ;
-            updateUser.FullName = user.FullName ;
-            updateUser.PhoneNumber = user.PhoneNumber;
-            updateUser.PhoneNumberConfirmed = user.PhoneNumberConfirmed;
-            updateUser.Age = user.Age;
-            updateUser.Email = user.Email ;
-            updateUser.Gender = user.Gender ;
-            updateUser.IsActive = user.IsActive ;
-            updateUser.LastLoginDate = user.LastLoginDate ;
-            updateUser.PasswordHash = user.PasswordHash ;
+            Mapper.Map(userDTO, updateUser);
+
+            //updateUser.UserName = user.UserName ;
+            //updateUser.FullName = user.FullName ;
+            //updateUser.PhoneNumber = user.PhoneNumber;
+            //updateUser.PhoneNumberConfirmed = user.PhoneNumberConfirmed;
+            //updateUser.Age = user.Age;
+            //updateUser.Email = user.Email ;
+            //updateUser.Gender = user.Gender ;
+            //updateUser.IsActive = user.IsActive ;
+            //updateUser.LastLoginDate = user.LastLoginDate ;
+            //updateUser.PasswordHash = user.PasswordHash ;
 
             await userRepository.UpdateAsync(updateUser, CancellationToken.None);
             return Ok(updateUser);

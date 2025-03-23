@@ -1,7 +1,9 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using AutoMapper;
 using Common.Utilities;
 using Contractor;
+using Contractor.CustomMaping;
 using Data;
 using Data.Repositories;
 using ElmahCore.Mvc;
@@ -9,15 +11,20 @@ using ElmahCore.Sql;
 using Entites;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NLog.Web;
+using Sentry.Protocol;
 using System;
 using System.Linq;
+using System.Reflection;
+using WebFramework.Api;
 using WebFramework.Configuration;
+using WebFramework.CustomMapping;
 using WebFramework.Middlewares;
 
 var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
@@ -25,16 +32,19 @@ try
 {
     var builder = WebApplication.CreateBuilder(args);
    
+
     builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
     builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
     {
-        containerBuilder.AddServices(); 
+        containerBuilder.AddServices();
+       
     });
 
     var settingSection = builder.Configuration.GetSection("SiteSettings");
     var siteSetting = settingSection.Get<SiteSettings>();
 
+    builder.Services.AddHttpContextAccessor();
     builder.Services.Configure<SiteSettings>(settingSection);
     builder.Services.AddCustomIdentity(siteSetting.IdentitySettings);
     builder.Services.AddJwtAuthentication(siteSetting.JwtSettings);
@@ -55,9 +65,35 @@ try
     builder.Services.AddRouting();
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
-    builder.Services.AddAutoMapper(typeof(MappingProfile));
+    builder.Services.InitializeAutoMapper();
+    //AutoMapperConfiguration.InitializeAutoMapper();
 
-  
+
+    //////builder.Services.AddAutoMapper(typeof(MappingProfile));
+    ////////// ثبت AutoMapper و کلاس‌های IHaveCustomMapping
+    //////////builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+    //////////builder.Services.Scan(scan => scan
+    //////////    .FromAssemblies(Assembly.GetExecutingAssembly())
+    //////////    .AddClasses(classes => classes.AssignableTo<IHaveCustomMapping>())
+    //////////    .AsImplementedInterfaces()
+    //////////    .WithTransientLifetime());
+
+    ////////builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
+    //////////////////////////////////////////
+    //var customMappings = Assembly.GetExecutingAssembly()
+    // .GetTypes()
+    // .Where(type => typeof(Profile).IsAssignableFrom(type) && !type.IsInterface && !type.IsAbstract)
+    // .ToList();
+
+    //foreach (var mapping in customMappings)
+    //{
+    //    //builder.Services.AddScoped(typeof(IHaveCustomMapping), mapping);
+    //    builder.Services.AddAutoMapper(mapping);
+    //}
+    /////////////////////////////////////////////  
+
+
     builder.Host.UseNLog();
 
     var app = builder.Build();
@@ -81,7 +117,7 @@ try
     app.UseAuthorization();
     app.UseElmah();
     app.UseHsts(app.Environment);
-    
+
     if (app.Environment.IsDevelopment())
     {
         app.UseSwagger();
@@ -91,7 +127,8 @@ try
     app.MapControllers();
     app.UseSentryTracing();
 
-  
+    ServiceProviderHelper.Instance = app.Services;
+    IdentityHelper.Initialize(app.Services.GetRequiredService<IHttpContextAccessor>());
 
     app.Run();
 }

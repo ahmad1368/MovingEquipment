@@ -35,6 +35,7 @@ namespace Contractor.Controllers
         {
             this.skillRepository = skillRepository;
             this.userManager = userManager;
+            
             this.Mapper = mapper;
         }
 
@@ -68,19 +69,14 @@ namespace Contractor.Controllers
         [HttpPost]
         public async Task<ApiResult<Skills>> Create(SkillDTO skillDTO, CancellationToken cancellationToken)
         {
-            var user = await userManager.GetUserAsync(User); // Get current user
+            //var user = await userManager.GetUserAsync(User); // Get current user
+            //skillDTO.InsertUser = user.UserName;
+            //skillDTO.InsertDate = DateTime.Now;
+            //skillDTO.IsActive = true;
 
-            //var newSkill = new Skills
-            //{
-            //    IsActive = true,
-            //    Title = skill.Title,
-            //    InsertDate = DateTime.Now,
-            //    InsertUser = user.UserName,
-            //    Description = skill.Description,
-            //    Score = skill.Score
-            //};
-
-            var NewSkill = Mapper.Map<Skills>(skillDTO);
+            //var NewSkill = Mapper.Map<Skills>(skillDTO);
+            var NewSkill = skillDTO.ToEntity();
+            
 
             await skillRepository.AddAsync(NewSkill, cancellationToken);
             return NewSkill;
@@ -88,17 +84,18 @@ namespace Contractor.Controllers
         }
 
         [HttpPut]
-        public async Task<ApiResult<Skills>> Update(Guid id, Skills skillDTO, CancellationToken cancellationToken)
+        public async Task<ApiResult<Skills>> Update(SkillDTO skillDTO, CancellationToken cancellationToken)
         {
-           
-            var updateSkill = await skillRepository.GetByIdAsync(cancellationToken, id);
-            var user = await userManager.GetUserAsync(User); // Get current user
 
-            Mapper.Map(skillDTO, updateSkill);
+            var updateSkill = await skillRepository.GetByIdAsync(cancellationToken, skillDTO.Id);
+            //var user = await userManager.GetUserAsync(User); // Get current user
 
-            updateSkill.UpdateDate = DateTime.Now;
-            updateSkill.UpdateUser = user.UserName ;          
+            //updateSkill.UpdateDate = DateTime.Now;
+            //updateSkill.UpdateUser = user.UserName;
 
+
+            //Mapper.Map(skillDTO, updateSkill);
+            updateSkill = skillDTO.ToEntity(updateSkill);
 
             await skillRepository.UpdateAsync(updateSkill, CancellationToken.None);
             return Ok(updateSkill);
@@ -112,10 +109,6 @@ namespace Contractor.Controllers
             return Ok();
         }
 
-        //public ApiResult GetSkillName() {
-
-        //    return new ApiResult(true, ApiResultStatusCode.Success, "Skill Name");
-        //}
 
 
     }

@@ -33,7 +33,7 @@ namespace Entites
             builder.Property(x => x.Title).IsRequired().HasMaxLength(100);
             builder.Property(x => x.Description).HasMaxLength(500);
             builder.HasOne(x=>x.ParrentSkills).WithMany(x=>x.ChildSkills).HasForeignKey(x=>x.ParrentSkillsId);
-            builder.HasMany(x => x.ContractorSkills).WithOne(p=>p.Skill).HasForeignKey(p=>p.SkillId);
+            builder.HasMany(x => x.ContractorSkills).WithOne(p=>p.Skills).HasForeignKey(p=>p.SkillsId);
 
         }
     }

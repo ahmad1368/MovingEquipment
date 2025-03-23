@@ -5,6 +5,7 @@ using Data.Repositories;
 using Entites;
 using Services;
 using Services.Services;
+using WebFramework.Api;
 
 namespace WebFramework.Configuration
 {
