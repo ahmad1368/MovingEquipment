@@ -35,7 +35,7 @@ namespace Contractor.Controllers
         {
             this.skillRepository = skillRepository;
             this.userManager = userManager;
-            
+
             this.Mapper = mapper;
         }
 
@@ -49,12 +49,16 @@ namespace Contractor.Controllers
             var skills = await skillRepository.TableNoTracking.ProjectTo<SkillDTO>(Mapper.ConfigurationProvider)
                 .ToListAsync();
             return skills;
+
+           
+           
+
         }
 
-        [HttpGet("{id:Guid}")]
-        public async Task<ApiResult<Skills>> Get(Guid id, CancellationToken cancellationToken)
+        [HttpGet("{Id:Guid}")]
+        public async Task<ApiResult<Skills>> Get(Guid Id, CancellationToken cancellationToken)
         {
-            var skill = await skillRepository.GetByIdAsync(cancellationToken, id);
+            var skill = await skillRepository.GetByIdAsync(cancellationToken, Id);
             if (skill == null)
             {
                 throw new NotFoundException("Skill Not Found");
@@ -76,7 +80,7 @@ namespace Contractor.Controllers
 
             //var NewSkill = Mapper.Map<Skills>(skillDTO);
             var NewSkill = skillDTO.ToEntity();
-            
+
 
             await skillRepository.AddAsync(NewSkill, cancellationToken);
             return NewSkill;

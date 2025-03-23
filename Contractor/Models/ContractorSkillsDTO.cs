@@ -10,6 +10,10 @@ namespace Contractor.Models
 {
     public class ContractorSkillsDTO : BaseDto<ContractorSkillsDTO, ContractorSkills, Guid>, IHaveCustomMapping, IValidatableObject //:BaseEntity<Guid>, IValidatableObject
     {
+        public ContractorSkillsDTO()
+        {
+                
+        }
         public string Title { get; set; }
         public string Descrition { get; set; }
         public double DollarPerHourForThisSkill { get; set; }
@@ -22,6 +26,7 @@ namespace Contractor.Models
 
         public override void CustomMappings(IMappingExpression<ContractorSkills,ContractorSkillsDTO> mappingExperission)
         {
+            // TODO: This function will call but SkillContractTitle is null allways
             mappingExperission.ForMember(
                 des=> des.SkillContractTitle,
                 config => config.MapFrom(src => $"{src.Title} ({src.User.FullName})")

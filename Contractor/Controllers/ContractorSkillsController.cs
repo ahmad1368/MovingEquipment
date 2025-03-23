@@ -42,10 +42,10 @@ namespace Contractor.Controllers
             return contractorSkills;
         }
 
-        [HttpGet("{id:Guid}")]
-        public async Task<ApiResult<ContractorSkills>> Get(Guid id, CancellationToken cancellationToken)
+        [HttpGet("{Id:Guid}")]
+        public async Task<ApiResult<ContractorSkills>> Get(Guid Id, CancellationToken cancellationToken)
         {
-            var contractorSkills = await ContractorSkillRepository.GetByIdAsync(cancellationToken, id);
+            var contractorSkills = await ContractorSkillRepository.GetByIdAsync(cancellationToken, Id);
             if (contractorSkills == null)
             {
                 throw new NotFoundException("Skill Not Found");

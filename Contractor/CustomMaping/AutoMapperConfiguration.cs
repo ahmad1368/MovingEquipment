@@ -20,6 +20,7 @@ namespace Contractor.CustomMaping
             config.CompileMappings(); // بهینه‌سازی AutoMapper
             var mapper = config.CreateMapper();
             services.AddSingleton(mapper); // اضافه کردن به DI
+           
 
             //// پیدا کردن کلاس‌های Profile و اضافه کردن آن‌ها به AutoMapper
             //var profiles = Assembly.GetExecutingAssembly()
