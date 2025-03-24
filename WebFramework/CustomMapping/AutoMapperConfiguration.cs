@@ -9,23 +9,17 @@ namespace WebFramework.CustomMapping
 {
     public static class AutoMapperConfiguration
     {
-        private static IMapper _mapper;
-
-
-        public static IMapper _InitializeAutoMapper()
+        public static void InitializeAutoMapper(this IServiceCollection services)
         {
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.AddCustomMappingProfile();
             });
 
-            // Compile mapping after configuration to boost map speed
-            config.CompileMappings();
+            config.CompileMappings(); // بهینه‌سازی AutoMapper
+            var mapper = config.CreateMapper();
+            services.AddSingleton(mapper); // اضافه کردن به DI
 
-            _mapper = config.CreateMapper();
-
-            
-            return _mapper;
         }
 
         public static void AddCustomMappingProfile(this IMapperConfigurationExpression config)
@@ -41,12 +35,8 @@ namespace WebFramework.CustomMapping
                 type.GetInterfaces().Contains(typeof(IHaveCustomMapping)))
                 .Select(type => (IHaveCustomMapping)Activator.CreateInstance(type));
 
-
             var profile = new CustomMappingProfile(list);
-
             config.AddProfile(profile);
         }
-
-        public static IMapper GetMapper() => _mapper;
     }
 }

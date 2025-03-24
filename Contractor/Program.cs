@@ -2,13 +2,8 @@
 using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
 using Common.Utilities;
-using Contractor;
-using Contractor.CustomMaping;
 using Data;
-using Data.Repositories;
 using ElmahCore.Mvc;
-using ElmahCore.Sql;
-using Entites;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -18,11 +13,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NLog.Web;
-using Sentry.Protocol;
 using System;
 using System.Linq;
-using System.Reflection;
-using WebFramework.Api;
 using WebFramework.Configuration;
 using WebFramework.CustomMapping;
 using WebFramework.Middlewares;
@@ -65,34 +57,7 @@ try
     builder.Services.AddRouting();
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
-    builder.Services.InitializeAutoMapper();
-    //AutoMapperConfiguration.InitializeAutoMapper();
-
-
-    //////builder.Services.AddAutoMapper(typeof(MappingProfile));
-    ////////// ثبت AutoMapper و کلاس‌های IHaveCustomMapping
-    //////////builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
-    //////////builder.Services.Scan(scan => scan
-    //////////    .FromAssemblies(Assembly.GetExecutingAssembly())
-    //////////    .AddClasses(classes => classes.AssignableTo<IHaveCustomMapping>())
-    //////////    .AsImplementedInterfaces()
-    //////////    .WithTransientLifetime());
-
-    ////////builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
-
-    //////////////////////////////////////////
-    //var customMappings = Assembly.GetExecutingAssembly()
-    // .GetTypes()
-    // .Where(type => typeof(Profile).IsAssignableFrom(type) && !type.IsInterface && !type.IsAbstract)
-    // .ToList();
-
-    //foreach (var mapping in customMappings)
-    //{
-    //    //builder.Services.AddScoped(typeof(IHaveCustomMapping), mapping);
-    //    builder.Services.AddAutoMapper(mapping);
-    //}
-    /////////////////////////////////////////////  
-
+    builder.Services.InitializeAutoMapper();   
 
     builder.Host.UseNLog();
 

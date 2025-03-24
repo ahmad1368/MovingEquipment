@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.CompilerServices;
+using System.Text.Json.Serialization;
 using WebFramework.CustomMapping;
 
 namespace WebFramework.Api
@@ -15,10 +16,10 @@ namespace WebFramework.Api
         where TDto : class, new()
         where TEntity : BaseEntity<TKey>, new()
     {
-
+        
         private IMapper? _mapper;
 
-        public IMapper Mapper
+        private IMapper Mapper
         {
             get
             {
@@ -136,9 +137,9 @@ namespace WebFramework.Api
 
     }
 
-    public abstract class BaseDto<TDto, TEntity> : BaseDto<TDto, TEntity, int>
+    public abstract class BaseDto<TDto, TEntity> : BaseDto<TDto, TEntity, Guid>
         where TDto : class, new()
-        where TEntity : BaseEntity<int>, new()
+        where TEntity : BaseEntity<Guid>, new()
     {
 
 
