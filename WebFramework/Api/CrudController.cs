@@ -11,12 +11,8 @@ using WebFramework.Filters;
 
 namespace WebFramework.Api
 {
-
-    [ApiController]
-    [AllowAnonymous]
-    [ApiResultFilter]
-    [Route("api/[controller]")]
-    public class CrudController<TDto, TSelectDto, TEntity, TKey> : ControllerBase
+   
+    public class CrudController<TDto, TSelectDto, TEntity, TKey> : BaseController
         where TDto : BaseDto<TDto, TEntity, TKey>, new()
         where TSelectDto : BaseDto<TSelectDto, TEntity, TKey>, new()
         where TEntity : BaseEntity<TKey>, new()
@@ -37,7 +33,7 @@ namespace WebFramework.Api
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<ApiResult<List<TSelectDto>>> Get()
+        public virtual async Task<ApiResult<List<TSelectDto>>> Get()
         {
 
             var Entitys = await repository.TableNoTracking.ProjectTo<TSelectDto>(Mapper.ConfigurationProvider)
@@ -49,7 +45,7 @@ namespace WebFramework.Api
 
         [HttpGet("{Id}")]
 
-        public async Task<ApiResult<TSelectDto>> Get(TKey Id, CancellationToken cancellationToken)
+        public virtual async Task<ApiResult<TSelectDto>> Get(TKey Id, CancellationToken cancellationToken)
         {
             var Entity = await repository.TableNoTracking.ProjectTo<TSelectDto>(Mapper.ConfigurationProvider)
                 .SingleOrDefaultAsync(p => p.Id.Equals(Id), cancellationToken);
@@ -63,7 +59,7 @@ namespace WebFramework.Api
         }
 
         [HttpPost]
-        public async Task<ApiResult<TEntity>> Create(TDto dto, CancellationToken cancellationToken)
+        public virtual async Task<ApiResult<TEntity>> Create(TDto dto, CancellationToken cancellationToken)
         {
             var NewEntity = dto.ToEntity();
             await repository.AddAsync(NewEntity, cancellationToken);
@@ -72,7 +68,7 @@ namespace WebFramework.Api
         }
 
         [HttpPut]
-        public async Task<ApiResult<TEntity>> Update(TDto dto, CancellationToken cancellationToken)
+        public virtual async Task<ApiResult<TEntity>> Update(TDto dto, CancellationToken cancellationToken)
         {
 
             var updateEntity = await repository.GetByIdAsync(cancellationToken, dto.Id);
@@ -83,7 +79,7 @@ namespace WebFramework.Api
             return Ok(updateEntity);
         }
         [HttpDelete]
-        public async Task<ApiResult> Delete(TKey id, CancellationToken cancellationToken)
+        public virtual async Task<ApiResult> Delete(TKey id, CancellationToken cancellationToken)
         {
 
             var Entity = await repository.GetByIdAsync(cancellationToken, id);

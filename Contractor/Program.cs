@@ -7,6 +7,8 @@ using ElmahCore.Mvc;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Versioning;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,12 +20,15 @@ using System.Linq;
 using WebFramework.Configuration;
 using WebFramework.CustomMapping;
 using WebFramework.Middlewares;
+using Microsoft.OpenApi.Models;
 
 var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
 try
 {
     var builder = WebApplication.CreateBuilder(args);
-   
+
+    builder.Services.AddCustomApiVersioning();
+
 
     builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
@@ -56,7 +61,17 @@ try
 
     builder.Services.AddRouting();
     builder.Services.AddEndpointsApiExplorer();
-    builder.Services.AddSwaggerGen();
+    //builder.Services.AddSwaggerGen();
+    builder.Services.AddSwaggerGen(options =>
+    {
+        // تعریف نسخه‌های مختلف API
+        options.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "1.0" });
+        options.SwaggerDoc("v2", new OpenApiInfo { Title = "My API", Version = "2.0" });
+
+        // تنظیم فیلتر برای نمایش نسخه‌های مختلف در Swagger
+        options.OperationFilter<ApiVersioningOperationFilter>();
+    });
+
     builder.Services.InitializeAutoMapper();   
 
     builder.Host.UseNLog();
@@ -86,7 +101,11 @@ try
     if (app.Environment.IsDevelopment())
     {
         app.UseSwagger();
-        app.UseSwaggerUI();
+        app.UseSwaggerUI(options =>
+        {
+            options.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            options.SwaggerEndpoint("/swagger/v2/swagger.json", "My API V2");
+        });
     }
 
     app.MapControllers();

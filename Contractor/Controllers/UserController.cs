@@ -25,11 +25,8 @@ using AutoMapper.QueryableExtensions;
 using AutoMapper;
 
 namespace Contractor.Controllers
-{
-    [Route("api/[controller]")]
-    [ApiResultFilter]
-    [ApiController]
-    public class UserController  : ControllerBase
+{ 
+    public class UserController  :  ControllerBase
     {
         private IUserRepository userRepository;
         private ILogger<UserController> logger;
