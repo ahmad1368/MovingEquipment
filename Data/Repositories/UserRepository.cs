@@ -16,7 +16,7 @@ namespace Data.Repositories
             : base(dbContext)
         {
         }
-
+         
         public Task<User> GetByUserAndPass(string username, string password, CancellationToken cancellationToken)
         {
             var passwordHash = SecurityHelper.GetSha256Hash(password);

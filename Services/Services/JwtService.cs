@@ -11,6 +11,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using System.Security.Cryptography.Xml;
 
 namespace Services.Services
 {
@@ -25,7 +26,7 @@ namespace Services.Services
             this.signInManager = signInManager;
         }
 
-        public async Task<string> GenerateAsync(User user)
+        public async Task<AccessToken> GenerateAsync(User user)
         {
             var secretKey = Encoding.UTF8.GetBytes(_siteSetting.JwtSettings.SecretKey); // longer that 16 character
             var signingCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKey), SecurityAlgorithms.HmacSha256Signature);
@@ -50,11 +51,11 @@ namespace Services.Services
 
             var tokenHandler = new JwtSecurityTokenHandler();
 
-            var securityToken = tokenHandler.CreateToken(descriptor);
+            var securityToken = tokenHandler.CreateJwtSecurityToken(descriptor);
 
-            var jwt = tokenHandler.WriteToken(securityToken);
+            //var jwt = tokenHandler.WriteToken(securityToken);
 
-            return jwt;
+            return new AccessToken(securityToken);
         }
 
         private async Task<IEnumerable<Claim>> _getClaimsAsync(User user)

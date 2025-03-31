@@ -10,8 +10,7 @@ using WebFramework.Filters;
 namespace WebFramework.Api
 {
 
-    [ApiController]
-    [AllowAnonymous]
+    [ApiController]  
     [ApiResultFilter]
     [Route("api/v{version:apiVersion}/[controller]")]
     //[ApiVersion("1.0")]

@@ -11,7 +11,7 @@ using WebFramework.Filters;
 
 namespace WebFramework.Api
 {
-   
+    
     public class CrudController<TDto, TSelectDto, TEntity, TKey> : BaseController
         where TDto : BaseDto<TDto, TEntity, TKey>, new()
         where TSelectDto : BaseDto<TSelectDto, TEntity, TKey>, new()

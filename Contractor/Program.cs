@@ -21,6 +21,7 @@ using WebFramework.Configuration;
 using WebFramework.CustomMapping;
 using WebFramework.Middlewares;
 using Microsoft.OpenApi.Models;
+using WebFramework.Swagger;
 
 var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
 try
@@ -60,17 +61,8 @@ try
     builder.Services.AddElmahCore(builder.Configuration, siteSetting);
 
     builder.Services.AddRouting();
-    builder.Services.AddEndpointsApiExplorer();
-    //builder.Services.AddSwaggerGen();
-    builder.Services.AddSwaggerGen(options =>
-    {
-        // تعریف نسخه‌های مختلف API
-        options.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "1.0" });
-        options.SwaggerDoc("v2", new OpenApiInfo { Title = "My API", Version = "2.0" });
-
-        // تنظیم فیلتر برای نمایش نسخه‌های مختلف در Swagger
-        options.OperationFilter<ApiVersioningOperationFilter>();
-    });
+    builder.Services.AddEndpointsApiExplorer(); 
+    builder.Services.AddSwagger();
 
     builder.Services.InitializeAutoMapper();   
 
@@ -100,12 +92,7 @@ try
 
     if (app.Environment.IsDevelopment())
     {
-        app.UseSwagger();
-        app.UseSwaggerUI(options =>
-        {
-            options.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-            options.SwaggerEndpoint("/swagger/v2/swagger.json", "My API V2");
-        });
+        app.UseSwaggerAndUI();
     }
 
     app.MapControllers();
@@ -125,3 +112,4 @@ finally
 {
     NLog.LogManager.Shutdown();
 }
+ 

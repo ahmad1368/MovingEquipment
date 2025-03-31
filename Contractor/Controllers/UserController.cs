@@ -17,16 +17,15 @@ using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using WebFramework.Api;
-using WebFramework.Filters;
-using Common;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using AutoMapper.QueryableExtensions;
 using AutoMapper;
+using Services;
 
 namespace Contractor.Controllers
 { 
-    public class UserController  :  ControllerBase
+    public class UserController  :  BaseController
     {
         private IUserRepository userRepository;
         private ILogger<UserController> logger;
@@ -78,11 +77,26 @@ namespace Contractor.Controllers
             return user;
         }
 
-        [HttpGet("[action]")]
+
+        /// <summary>
+        /// This Method Generat JWT Token 
+        /// </summary>
+        /// <param name="tokenRequest">information of token request</param> 
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        /// <exception cref="BadRequestException"></exception>
+        [HttpPost("[action]")]
         [AllowAnonymous]
-        public async Task<string> Token(string username,string password, CancellationToken cancellationToken)
+        public async Task<AccessToken> Token([FromForm] TokenRequest tokenRequest,CancellationToken cancellationToken)
         {
-            var user = await userRepository.GetByUserAndPass(username, password, cancellationToken); //jwtService.GenerateAsync(user);
+            if(!tokenRequest.grant_type.Equals("password",StringComparison.OrdinalIgnoreCase) )
+            {
+                logger.LogError("OAuth is Not Password");
+                throw new BadRequestException("OAuth is Not Password");
+            }
+
+            
+            var user = await userRepository.GetByUserAndPass(tokenRequest.username, tokenRequest.password, cancellationToken); //jwtService.GenerateAsync(user);
             if (user == null)
             {
                 logger.LogError("User Not Found");
@@ -110,25 +124,6 @@ namespace Contractor.Controllers
             newUser.LockoutEnabled = true;
             newUser.AccessFailedCount = 1;
 
-            //var newUser = new User
-            //{
-
-            //    UserName = user.UserName,
-            //    FullName = user.FullName,
-            //    Age = user.Age,
-            //    IsActive = true,
-            //    Gender = user.Gender,
-            //    LastLoginDate = DateTime.Now,
-            //    EmailConfirmed = true,
-            //    PasswordHash = SecurityHelper.GetSha256Hash( user.PASSWORD),
-            //    PhoneNumberConfirmed = true,
-            //    TwoFactorEnabled = true,
-            //    LockoutEnabled = true,
-            //    AccessFailedCount = 1,
-            //    SecurityStamp = Guid.NewGuid().ToString(),
-            //    ConcurrencyStamp = Guid.NewGuid().ToString()
-            //};
-
             await userRepository.AddAsync(newUser, cancellationToken);
             return newUser;
 
@@ -141,17 +136,6 @@ namespace Contractor.Controllers
             var updateUser = await userRepository.GetByIdAsync(cancellationToken, id);
 
             Mapper.Map(userDTO, updateUser);
-
-            //updateUser.UserName = user.UserName ;
-            //updateUser.FullName = user.FullName ;
-            //updateUser.PhoneNumber = user.PhoneNumber;
-            //updateUser.PhoneNumberConfirmed = user.PhoneNumberConfirmed;
-            //updateUser.Age = user.Age;
-            //updateUser.Email = user.Email ;
-            //updateUser.Gender = user.Gender ;
-            //updateUser.IsActive = user.IsActive ;
-            //updateUser.LastLoginDate = user.LastLoginDate ;
-            //updateUser.PasswordHash = user.PasswordHash ;
 
             await userRepository.UpdateAsync(updateUser, CancellationToken.None);
             return Ok(updateUser);
