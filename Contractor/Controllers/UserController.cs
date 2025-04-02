@@ -22,10 +22,11 @@ using Microsoft.AspNetCore.Identity;
 using AutoMapper.QueryableExtensions;
 using AutoMapper;
 using Services;
+using WebFramework.Filters;
 
 namespace Contractor.Controllers
 { 
-    public class UserController  :  BaseController
+    public class UserController  : BaseController
     {
         private IUserRepository userRepository;
         private ILogger<UserController> logger;

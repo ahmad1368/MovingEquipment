@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System;
@@ -14,7 +15,7 @@ namespace WebFramework.Swagger
 {
     public static class SwaggerConfigurationExtensions
     {
-        public static void AddSwagger1(this IServiceCollection services)
+        public static void AddSwagger(this IServiceCollection services)
         {
             Assert.NotNull(services, nameof(services));
 
@@ -39,15 +40,39 @@ namespace WebFramework.Swagger
 
                 #region Add Jwt Authentication
                 // Add Lockout icon on top of swagger UI page to authenticate
-                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                //options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                //{
+                //    Type = SecuritySchemeType.OAuth2,
+                //    Scheme = "Bearer",
+                //    BearerFormat = "JWT",
+                //    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                //    In = ParameterLocation.Header,
+                //});
+
+                var isDeveloapment = services.BuildServiceProvider().GetService<IHostEnvironment>().IsDevelopment();
+
+                options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
                 {
                     Type = SecuritySchemeType.OAuth2,
-                    Scheme = "Bearer",
-                    BearerFormat = "JWT",
-                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
-                    In = ParameterLocation.Header,
+                    Flows = new OpenApiOAuthFlows
+                    {
+                                
+                       Password = new OpenApiOAuthFlow
+                       {
+                           TokenUrl = (isDeveloapment ? new Uri("https://localhost:7247/api/v1/User/Token"): new Uri("https://MyLoadWebsite/api/v1/User/Token")),
+                           Scopes = new Dictionary<string, string>
+                            {
+                                { "api.read", "Read access to protected resources" },
+                                { "api.write", "Write access to protected resources" }
+                            }
+                       }
+                    }
                 });
+
                 #endregion
+
+                
+
 
                 #region Versioning
                 // Remove version parameter from all Operations
@@ -71,7 +96,7 @@ namespace WebFramework.Swagger
             });
         }
 
-        public static void UseSwaggerAndUI1(this IApplicationBuilder app)
+        public static void UseSwaggerAndUI(this IApplicationBuilder app)
         {
             Assert.NotNull(app, nameof(app));
 
@@ -81,6 +106,9 @@ namespace WebFramework.Swagger
             // Swagger middleware for generating UI from swagger.json
             app.UseSwaggerUI(options =>
             {
+                options.OAuthClientId("your-client-id");
+                options.OAuthClientSecret("your-client-secret");
+                options.OAuthUsePkce();
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "V1 Docs");
                 options.SwaggerEndpoint("/swagger/v2/swagger.json", "V2 Docs");
             });

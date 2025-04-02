@@ -13,7 +13,7 @@ namespace WebFramework.Api
     [ApiController]  
     [ApiResultFilter]
     [Route("api/v{version:apiVersion}/[controller]")]
-    //[ApiVersion("1.0")]
+    [ApiVersion("1.0")]
     public class BaseController : ControllerBase
     {
         public bool UserIsAutheticated => User.Identity.IsAuthenticated;

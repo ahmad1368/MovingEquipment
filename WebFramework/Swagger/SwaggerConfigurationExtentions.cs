@@ -2,19 +2,20 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using WebFramework.Configuration;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace WebFramework.Swagger
 {
     public static class SwaggerConfigurationExtentions
     {
-        public static void AddSwagger(this IServiceCollection services)
+        public static void AddSwagger1(this IServiceCollection services)
         {
             services.AddSwaggerGen(options =>
             {
                 var xmlDocPath = System.AppDomain.CurrentDomain.BaseDirectory + @"Contractor.xml";
                 options.IncludeXmlComments(xmlDocPath, true);
 
-                
+              
 
                 options.DescribeAllParametersInCamelCase();
 
@@ -26,7 +27,7 @@ namespace WebFramework.Swagger
                 options.OperationFilter<ApiVersioningOperationFilter>();
             });
         }
-        public static void UseSwaggerAndUI(this WebApplication app)
+        public static void UseSwaggerAndUI1(this WebApplication app)
         {
             app.UseSwagger();
             app.UseSwaggerUI(options =>

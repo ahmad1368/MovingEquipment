@@ -12,7 +12,7 @@ using WebFramework.Filters;
 
 namespace Contractor.Controllers.V1
 {
- 
+
     [ApiVersion("1.0")]
     public class SkillController : CrudController<SkillDTO, SkillSelectDTO, Skills, Guid>
     {

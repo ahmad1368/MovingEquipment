@@ -99,6 +99,7 @@ try
     app.UseSentryTracing();
 
     ServiceProviderHelper.Instance = app.Services;
+    
     IdentityHelper.Initialize(app.Services.GetRequiredService<IHttpContextAccessor>());
 
     app.Run();
